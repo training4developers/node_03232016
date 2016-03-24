@@ -1,22 +1,37 @@
 "use strict";
 
-setImmediate(function() {
-	console.log("timeout 1");
-	process.nextTick(function() {
-		console.log("tick 1");
-	})
-},0);
+const
+	configApp = require("config-app"),
+	defaultConfig = {
+		webServer: {
+			port: 3000,
+			folder: "src/www"
+		}
+	};
 
-setImmediate(function() {
-	console.log("timeout 2");
-	process.nextTick(function() {
-		console.log("tick 2");
-	})
-},0);
+	configApp("config.json", defaultConfig).then(function(options) {
+		return require("./app")(options);
+	}).then(function(results) {
 
-setImmediate(function() {
-	console.log("timeout 3");
-	process.nextTick(function() {
-		console.log("tick 3");
-	})
-},0);
+		results.app.on("request", function() {
+			console.log("a request was received");
+		});
+
+		console.log(`web server running on port ${results.options.webServer.port}`);
+	}).catch(function(err) {
+		console.log(err);
+	});
+	//
+	// configApp("config.json", defaultConfig, function(err, options) {
+	//
+	// 	if (err) { return; }
+	//
+	// 	require("./app")(options, function(err, options) {
+	//
+	// 		if (err) { return; }
+	//
+	// 		console.log(`web server running on port ${options.webServer.port}`);
+	// 	}).then(function() {
+	// 		console.log("I love promises too!  And unicorns...");
+	// 	});
+	// });

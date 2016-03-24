@@ -22,6 +22,7 @@
   "dependencies": {
     "@training4developers/ewg-demo-08": "^1.0.4",
     "express": "^4.13.4",
+    "object-assign": "^4.0.1",
     "q": "^1.1.1"
   },
   "devDependencies": {}
