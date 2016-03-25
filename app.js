@@ -4,7 +4,9 @@ module.exports = function(config, cb) {
 
 	const
 		EventEmitter = require("events").EventEmitter,
-		express = require("express");
+		express = require("express"),
+		bodyParser = require("body-parser");
+
 
 	class WebApp extends EventEmitter {
 
@@ -12,12 +14,13 @@ module.exports = function(config, cb) {
 			super();
 			this._app = express();
 
-			this._app.use((req, res, next) => {
-				this.emit("request", { });
-				next();
-			})
+			this._app.use("/api", bodyParser.json());
+			this._app.use("/api", require("./routers/widgets"));
 
 			this._app.use(express.static(config.webServer.folder));
+
+
+
 		}
 
 		get app() {
@@ -37,15 +40,17 @@ module.exports = function(config, cb) {
 				return;
 			}
 
-			if (cb) cb(null, {
-				app: webApp,
-				options: config
-			});
-
-			resolve({
-				app: webApp,
-				options: config
-			});
+			if (cb) {
+				cb(null, {
+					app: webApp,
+					options: config
+				});
+			} else {
+				resolve({
+					app: webApp,
+					options: config
+				});
+			}
 		});
 	});
 
