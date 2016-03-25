@@ -1,50 +1,41 @@
-"use strict";
+module.exports = function(widgetsModel) {
 
-let
-	widgets = [ { id: 1, name: "Widget", color:"blue", size: "large" }],
-	widgetRouter = require("express").Router();
 
-widgetRouter.route("/widgets")
-	.get(function(req, res) {
-		res.json(widgets);
-	})
-	.post(function(req, res) {
-		widgets.push(req.body);
-		res.json({ success: true });
-	});
+	"use strict";
 
-widgetRouter.route("/widgets/:widgetId")
-	.get(function(req, res) {
-		res.json(findWidget(req.params.widgetId));
-	})
-	.put(function(req, res) {
-		let widgetIndex = findWidgetIndex(req.params.widgetId);
-		if (widgetIndex > -1) {
-			widgets.splice(findWidgetIndex(req.params.widgetId),1);
-			widgets.push(req.body);
+	let
+		widgets = [ { id: 1, name: "Widget", color:"blue", size: "large" }],
+		widgetRouter = require("express").Router();
+
+	widgetRouter.route("/widgets")
+		.get(function(req, res) {
+			res.json(widgetsModel.getAll());
+		})
+		.post(function(req, res) {
+			widgetsModel.insert(req.body);
 			res.json({ success: true });
-		} else {
-			res.sendStatus(400);
-		}
-	})
-	.delete(function(req,res) {
-		let widgetIndex = findWidgetIndex(req.params.widgetId);
-		if (widgetIndex > -1) {
-			var deletedWidget = widgets.splice(,1);
-			res.json(deletedWidget);
-		} else {
-			res.sendStatus(400);
-		}
-	});
+		});
 
-module.exports = widgetRouter;
+	widgetRouter.route("/widgets/:widgetId")
+		.get(function(req, res) {
+			res.json(widgetsModel.get(req.params.widgetId));
+		})
+		.put(function(req, res) {
+			try {
+				widgetsModel.update(req.body));
+				res.json({ success: true });
+			} catch(err) {
+				res.sendStatus(400);
+			}
+		})
+		.delete(function(req,res) {
+			try {
+				res.json(widgetsModel.delete(req.params.widgetId)));
+			} catch(err) {
+				res.sendStatus(400);
+			}
+		});
 
-function findWidget(widgetId) {
-	return widgets.filter(function(widget) {
-		return widget.id === parseInt(widgetId, 10);
-	})[0];
-}
+	return widgetRouter;
 
-function findWidgetIndex(widgetId) {
-	return widgets.indexOf(findWidget(parseInt(widgetId, 10)));
 }

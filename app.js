@@ -15,7 +15,8 @@ module.exports = function(config, cb) {
 			this._app = express();
 
 			this._app.use("/api", bodyParser.json());
-			this._app.use("/api", require("./routers/widgets"));
+			this._app.use("/api", require("./routers/widgets")
+				(require("./models/widgets")));
 
 			this._app.use(express.static(config.webServer.folder));
 
