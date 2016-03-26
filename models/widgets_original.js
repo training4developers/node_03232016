@@ -1,26 +1,14 @@
 "use strict";
 
-const
-	mongoose = require("mongoose");
-	WidgetModel = require("../mongoose/widget");
-
 let
 	widgets = [];
 
 module.exports = {
 	getAll: function() {
-		return new Promise(function(resolve, reject) {
-			WidgetModel.find({ _id: "idvalue" }, function(err, results) {
-				if (err) {
-					reject(err);
-					return;
-				}
-				resolve(results);
-			});
-		});
+		return widgets;
 	},
 	get: function(widgetId) {
-		return findWidget(widgetId);
+		return findWidget(widgetId)
 	},
 	insert: function(widget) {
 		widgets.push(widget);

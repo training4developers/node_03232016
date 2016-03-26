@@ -7,6 +7,8 @@ module.exports = function(config, cb) {
 		express = require("express"),
 		bodyParser = require("body-parser");
 
+	require("mongoose")
+		.connect(`mongodb://${config.mongoServer.host}:${config.mongoServer.port}/${config.mongoServer.dbName}`);
 
 	class WebApp extends EventEmitter {
 

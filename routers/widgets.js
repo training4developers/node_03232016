@@ -9,7 +9,9 @@ module.exports = function(widgetsModel) {
 
 	widgetRouter.route("/widgets")
 		.get(function(req, res) {
-			res.json(widgetsModel.getAll());
+			widgetsModel.getAll().then(function(results) {
+				res.json(results);
+			});
 		})
 		.post(function(req, res) {
 			widgetsModel.insert(req.body);
@@ -22,7 +24,7 @@ module.exports = function(widgetsModel) {
 		})
 		.put(function(req, res) {
 			try {
-				widgetsModel.update(req.body));
+				widgetsModel.update(req.body);
 				res.json({ success: true });
 			} catch(err) {
 				res.sendStatus(400);
@@ -30,7 +32,7 @@ module.exports = function(widgetsModel) {
 		})
 		.delete(function(req,res) {
 			try {
-				res.json(widgetsModel.delete(req.params.widgetId)));
+				res.json(widgetsModel.delete(req.params.widgetId));
 			} catch(err) {
 				res.sendStatus(400);
 			}
